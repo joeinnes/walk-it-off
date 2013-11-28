@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Walk It Off</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="user-scalable=no, width=device-width, maximum-scale=1.0">
+        <!-- <link rel="stylesheet" href="css/normalize.min.css"> -->
+        
+        <!-- iOS stuff 
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png" />    Homescreen Icon (remove "precomposed" to have iOS add glossy effect)
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-retina.png" /> Homescreen Icon Retina
+        <link rel="apple-touch-startup-image" href="/apple-touch-startup-image.png" media="(orientation:portrait)" />   These two need to be the exact same resolution, 320x460 for iPhone/iPod or 1004x768 for iPad
+        <link rel="apple-touch-startup-image" href="/apple-touch-startup-image.png" media="(orientation:landscape)" /> 
+
+        Sample call link: <a href="tel:1-408-555-5555">Call 408-555-5555</a>
+        -->
+          
+  <!-- jQuery mobile -->
+        <link rel="stylesheet" href="jqm/jquery.mobile-1.3.2.min.css" />
+        <link rel="stylesheet" href="jqm/extended.css" />        
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/fonts.css">
+    </head>
+        <!-- Home -->
+        <div data-role="page" id="page1" data-next="#two" class="page">
+            <div data-role="content">
+                <h1>
+                    Walk It Off
+                </h1>
+                <p>What do you want to eat today?</p> 
+                <div id="match_food_form">
+                    <form class="form-search" action="javascript:void(0);">
+                        <div data-role="fieldcontain">
+                            <input type="text" name="userquery" placeholder="eg: steak" id="userquery">
+                            <a data-role="button" id="search" href="#two" onclick="buildForm(1); formSubmit('userquery', 'userquery')" ><span aria-hidden="true" class="li_search"></span> Search</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div data-role="footer" data-id="navbar" data-position="fixed">
+                <div data-role="navbar" data-iconpos="bottom">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="" class="ui-btn-active ui-state-persist">
+                                <span aria-hidden="true" class="li_search" style="font-size: 2em;"></span><br>
+                                Search
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#two" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_food" style="font-size: 2em;"></span><br>
+                                Foods
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#map" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_location" style="font-size: 2em;"></span><br>
+                                Locations
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#settings" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_settings" style="font-size: 2em;"></span><br>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div data-role="page" id="two" aria-labelledby="foodChooser" class="page" data-next="#map" data-prev="#page1">
+            <div data-role="content">
+                <h3 id="foodChooserHeader">Which of these did you mean?</h3>
+                <form action="javascript.void(0)" onsubmit="settingsSave('foodid', 'disttoday')">
+                <select name="foodid" id="foodid" style="width: 100%">
+                </select><br>
+                Distance already walked today:
+                <input type="number" step="any" id="disttoday" name="disttoday" placeholder="eg: 2"> km
+                <div data-role="fieldcontain">
+                    <a data-role="button" id="cancel" href="#page1" onclick="$('#foodList').empty(); $('#foodList').selectmenu('refresh');"><span aria-hidden="true" class="li_trash"></span> Cancel</a>
+                    <a data-role="button" id="search" href="#map" data-ajax="false" onclick="settingsSave('foodid', 'disttoday');"><span aria-hidden="true" class="li_like"></span> OK</a>
+                </div>
+                </form>
+            </div>
+            <div data-role="footer" data-id="navbar" data-position="fixed">
+                <div data-role="navbar" data-iconpos="bottom">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_search" style="font-size: 2em;"></span><br>
+                                Search
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#two" data-transition="fade" data-theme="" data-icon=""  class="ui-btn-active ui-state-persist">
+                                <span aria-hidden="true" class="li_food" style="font-size: 2em;"></span><br>
+                                Foods
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#map" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_location" style="font-size: 2em;"></span><br>
+                                Locations
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#settings" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_settings" style="font-size: 2em;"></span><br>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div data-role="page" id="map" class="page" data-next="#settings" data-prev="#two">
+            <div data-role="content"  id="map-content">
+                <style>/** FIX for Bootstrap and Google Maps Info window styes problem **/
+                    img[src*="gstatic.com/"], img[src*="googleapis.com/"] {
+	                   max-width: none;
+                    }
+                </style>
+                <div id="map-canvas"></div>
+            </div>
+            <div data-role="footer" data-id="navbar" data-position="fixed">
+                <div data-role="navbar" data-iconpos="bottom">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_search" style="font-size: 2em;"></span><br>
+                                Search
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#two" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_food" style="font-size: 2em;"></span><br>
+                                Foods
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#map" data-transition="fade" data-theme="" data-icon="" class="ui-btn-active ui-state-persist">
+                                <span aria-hidden="true" class="li_location" style="font-size: 2em;"></span><br>
+                                Locations
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#settings" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_settings" style="font-size: 2em;"></span><br>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div data-role="page" id="settings" class="page" data-prev="#map">
+            <div data-role="content">
+                <h2>Walk It Off</h2>
+                <div id="match_food_form">
+                    <form class="form-search" action="javascript:void(0);">
+                        <div data-role="fieldcontain">
+                            <input type="number" name="weightinlbs" placeholder="eg: 180" id="weightinlbs"> lbs
+                            <input type="number" name="userspeed" placeholder="eg: 3.5" id="userspeed" step="any"> miles per hour
+                        </div>
+                        <a data-role="button" id="search" onclick="settingsSave('weightinlbs', 'userspeed'); alert('Settings saved.');" >Save</a>
+                    </form>
+                </div>
+                <h4>Information</h4>
+                <p style="background:rgba(255,255,255,0.8)"><small>Walk It Off is not intended to offer medical advice. Its creator is not a doctor, and this application is no substitute for one. It is intended to be used purely for informational purposes, and nobody at any stage offers any warranty as to the accuracy of information the app provides. To the greatest extent permissible by law, the creator refuses all liability for any harm that may come from the use or misuse of this app. Walk It Off was coded by Joe Innes, and is based on an original idea by <b>Oliver Burkman</b>. The data is provided by Google Maps and the USDA. The API used is a modification of the Arrest-MySQL API, using code by Gilbert Pellegrom, and sr23-nutrient-calculator, using code by neorou. A copy of the source code of all parts of Walk It Off is available on request.</small>
+            </div>
+            <div data-role="footer" data-id="navbar" data-position="fixed">
+                <div data-role="navbar" data-iconpos="bottom">
+                    <ul>
+                        <li>
+                            <a href="#page1" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_search" style="font-size: 2em;"></span><br>
+                                Search
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#two" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_food" style="font-size: 2em;"></span><br>
+                                Foods
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#map" data-transition="fade" data-theme="" data-icon="">
+                                <span aria-hidden="true" class="li_location" style="font-size: 2em;"></span><br>
+                                Locations
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#settings" data-transition="fade" data-theme="" data-icon="" class="ui-btn-active ui-state-persist">
+                                <span aria-hidden="true" class="li_settings" style="font-size: 2em;"></span><br>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script src="jqm/jquery-1.9.1.min.js"></script>
+        <script src="jqm/jquery.mobile-1.3.2.min.js"></script>
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=true&libraries=places,geometry"></script>
+        <script src="js/main.js"></script>
+        <script src="js/enhanced-transitions.js"></script>
+        <script></script>
+    </body>
+</html>

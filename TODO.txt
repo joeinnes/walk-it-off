@@ -1,0 +1,38 @@
+KNOWN ISSUES
+============
+- Alerts not working
+- No settings menu (own weight/height, etc.)
+- No portion size option
+- No key
+
+ROADMAP/CHANGELOG
+=================
+v 0.8.8
+    - Swipe transitions
+    - Rewording of homescreen
+v 0.8.9
+    - CSS transitions via plugin
+    - Working alerts
+    - Change icons for markers
+    - Hide background on map page - DONE
+v 0.9.0
+    - Options in settings menu
+    - Portion sizes
+    - Add key to map
+v 0.9.1
+
+v 0.9.5
+    - Infowindows displaying correctly
+    
+v 0.9.9
+    - Infowindow shows calories burned to that restaurant
+
+v 1.0.0
+    - Settings working
+    - 
+    
+v 2.0.0
+    - Migrated to JSON database
+    
+v 3.0.0
+    - Codebase rewrite to create native apps
