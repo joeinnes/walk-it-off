@@ -1,10 +1,3 @@
-KNOWN ISSUES
-============
-- Alerts not working
-- No settings menu (own weight/height, etc.)
-- No portion size option
-- No key
-
 ROADMAP/CHANGELOG
 =================
 v 0.8.8
